@@ -1,8 +1,10 @@
-#include "Engine/core/Application.hpp"
-#include <iostream>
+#include "Engine/core/Application/Application.hpp"
+#include "Engine/core/Logger/Logger.hpp"
 
-int main(void) {
-  Psion::Application app = Psion::Application::GetInstance("Engine");
+using namespace Psion;
 
-  std::cout << app.GetName() << std::endl;
+int main( void ) {
+    Logger::Initialize();
+    Application &a = Application::GetInstance( "Psion Engine", 1280, 720 );
+    a.Run();
 }

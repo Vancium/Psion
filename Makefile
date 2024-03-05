@@ -6,10 +6,21 @@ UNAME_S = $(shell uname -s)
 CC = clang++
 
 
+
+INCFLAGS = -Ilibs/glm
+INCFLAGS += -Ilibs/glfw/include
+INCFLAGS += -Ilibs/spdlog/include
+
 CCFLAGS  = -std=c++20 -O2 -g -Wall -Wextra -Wpedantic -Wno-c99-extensions
 CCFLAGS += -Wno-unused-parameter
+CCFLAGS += $(INCFLAGS)
+
 
 LDFLAGS  = -lm
+LDFLAGS += $(INCFLAGS)
+LDFLAGs += libs/glm/build/glm/libglm.a
+LDFLAGS += libs/glfw/src/libglfw3.a
+LDFLAGS += libs/spdlog/libspdlog.a
 
 # TODO: OSX specific
 FRAMEWORKS	= -framework QuartzCore
@@ -19,7 +30,6 @@ FRAMEWORKS += -framework Metal
 FRAMEWORKS += -framework CoreFoundation
 FRAMEWORKS += -framework IOKit
 
-BGFX_TARGET =
 
 ifeq ($(UNAME_S), Darwin)
 	LDFLAGS += $(FRAMEWORKS)
@@ -42,7 +52,10 @@ BIN = bin
 
 .PHONY: all clean
 
-all: dirs build
+all: dirs libs build
+
+libs:
+	cd libs/glfw && bear -- cmake . && bear -- make
 
 dirs:
 	mkdir -p ./$(BIN)
